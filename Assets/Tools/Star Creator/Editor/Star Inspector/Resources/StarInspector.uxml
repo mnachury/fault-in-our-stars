@@ -1,0 +1,16 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <ui:VisualElement name="TitleContainer" class="title" style="height: auto;">
+        <ui:Label text="Star Properties" display-tooltip-when-elided="true" name="Title" class="title" />
+    </ui:VisualElement>
+    <ui:VisualElement name="Properties">
+        <ui:TextField picking-mode="Ignore" label="Name" value="filler text" name="Name" style="height: 20px;" />
+        <uie:ColorField label="Color" value="#CA0000FF" name="Color" />
+        <ui:VisualElement name="PowerSlider" class="powerSlider">
+            <ui:VisualElement style="width: 100%;">
+                <ui:Slider picking-mode="Ignore" label="Radius (Solar radius)" value="0" high-value="1" tooltip="How big is the radius of the star compare tor our sun" name="RadiusSlider" low-value="0.2" show-input-field="false" style="width: auto; margin-right: 3px;" />
+            </ui:VisualElement>
+            <uie:FloatField value="1" name="RadiusInput" style="min-width: auto; margin-right: 3px; width: 50px; justify-content: flex-start; align-items: auto; flex-wrap: nowrap; flex-direction: row;" />
+        </ui:VisualElement>
+        <ui:Slider picking-mode="Ignore" label="Gravity well" value="10" high-value="100" low-value="1" tooltip="How far the star&apos;s gravity affects other objects. Expressed in multiply of the star radius" show-input-field="true" name="GravityWellSlider" />
+    </ui:VisualElement>
+</ui:UXML>
