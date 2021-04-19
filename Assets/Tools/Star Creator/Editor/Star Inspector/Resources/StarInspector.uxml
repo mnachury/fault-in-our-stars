@@ -1,6 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
-    <ui:VisualElement name="TitleContainer" class="title" style="height: auto;">
-        <ui:Label text="Star Properties" display-tooltip-when-elided="true" name="Title" class="title" />
+    <Style src="StarInspector.uss" />
+    <ui:VisualElement name="TitleContainer" style="height: auto;">
+        <ui:Label text="Star Properties" display-tooltip-when-elided="true" name="Title" class="title" style="margin-top: 0;" />
     </ui:VisualElement>
     <ui:VisualElement name="Properties">
         <ui:TextField picking-mode="Ignore" label="Name" value="filler text" name="Name" style="height: 20px;" />

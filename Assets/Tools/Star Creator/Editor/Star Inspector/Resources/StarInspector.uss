@@ -6,13 +6,13 @@
     -unity-font-style: bold;
     border-top-width: 0;
     border-bottom-width: 2px;
-    border-bottom-color: rgb(32, 32, 32);
+    border-bottom-color: rgb(116, 116, 116);
     font-size: 16px;
     margin-top: 2px;
     margin-left: 0;
     margin-bottom: 2px;
     width: 100%;
-    height: 100%;
+    height: 20px;
 }
 
 .powerSlider {

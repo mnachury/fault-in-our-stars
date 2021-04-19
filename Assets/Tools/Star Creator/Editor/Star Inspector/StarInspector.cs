@@ -18,10 +18,20 @@ public class StarInspector : Editor
     private Slider _radiusSlider;
     private Slider _gravityWellSlider;
 
+    public void ChangeTarget(StarController star)
+    {
+        _star = star;
+    }
 
     private void OnEnable()
     {
-        _star = target as StarController;
+        try
+        {
+            _star = target as StarController;
+        }
+        catch { }
+
+
         _root = new VisualElement();
         UI = Resources.Load<VisualTreeAsset>("StarInspector");
         StyleSheet = Resources.Load<StyleSheet>("StarInspector");
@@ -42,7 +52,7 @@ public class StarInspector : Editor
         var _color = root.Query<ColorField>("Color").First();
         _color.value = _star.Color;
         _color.RegisterCallback<ChangeEvent<Color>>(OnColorChange);
-        
+
 
         // Radius's power slider
         _radiusSlider = root.Query<Slider>("RadiusSlider").First();
@@ -66,11 +76,13 @@ public class StarInspector : Editor
     private void OnNameChange(ChangeEvent<string> evt)
     {
         _star.Name = evt.newValue;
+        EditorUtility.SetDirty(_star);
     }
 
     private void OnColorChange(ChangeEvent<Color> evt)
     {
         _star.Color = evt.newValue;
+        EditorUtility.SetDirty(_star);
     }
 
     private void OnRadiusSliderChange(ChangeEvent<float> evt)
@@ -82,6 +94,7 @@ public class StarInspector : Editor
             value = Math.Round(value, 4);
         _radiusInput.SetValueWithoutNotify((float)value);
         _star.Radius = (float)value;
+        EditorUtility.SetDirty(_star);
     }
     private float CalcSliderPosFromRadius(float radius) => (float)Math.Pow(radius / 10000f, 1f / 10f);
     private void OnRadiusInputChange(ChangeEvent<float> evt)
@@ -89,10 +102,12 @@ public class StarInspector : Editor
         _star.Radius = (float)evt.newValue;
         var value = CalcSliderPosFromRadius(evt.newValue);
         _radiusSlider.SetValueWithoutNotify((float)value);
+        EditorUtility.SetDirty(_star);
     }
     private void OnGravityWellSliderChange(ChangeEvent<float> evt)
     {
         _star.GravityWellRadius = evt.newValue;
+        EditorUtility.SetDirty(_star);
     }
     #endregion
 

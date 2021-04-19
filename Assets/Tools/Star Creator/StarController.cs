@@ -1,15 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [ExecuteInEditMode]
 public class StarController : MonoBehaviour
 {
     private const string defaultMaterial = "Diffuse";
-    private string _name;
     private Material _material;
+    [SerializeField]
+    private string _name;
+    [SerializeField]
     private Color _color;
+    [SerializeField]
     private float _radius = 1f;
+    [SerializeField]
     private float _gravityWellRadius = 2f;
 
     public string Name
@@ -46,34 +48,38 @@ public class StarController : MonoBehaviour
     public float GravityWellRadius
     {
         get => _gravityWellRadius;
-        set
-        {
-            _gravityWellRadius = value;
-        }
+        set => _gravityWellRadius = value;
+        
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        _name = name;
+        if(_name == "")
+            _name = name;
 
         // Color
-        _material =  new Material(Shader.Find(defaultMaterial));
         Renderer renderer;
         if (!TryGetComponent(out renderer))
         {
             renderer = gameObject.AddComponent<Renderer>();
         }
-        renderer.material = _material;
-        _color = _material.color;
-
-        _radius = transform.localScale.x;
+        _material = new Material(Shader.Find(defaultMaterial));
+        renderer.sharedMaterial = _material;
+        if (_color != null)
+            _material.color = _color;
+        else
+            _color = _material.color;
+        
+        if(_radius == default(float))
+            _radius = transform.localScale.x;
     }
 
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.white;
-        Gizmos.DrawWireSphere(transform.position, _gravityWellRadius * _radius);
+        // *0.6 because unity draws gizmos 1.4 times bigger
+        Gizmos.DrawWireSphere(transform.position, _gravityWellRadius * _radius * 0.6f);
     }
 
     // Update is called once per frame
