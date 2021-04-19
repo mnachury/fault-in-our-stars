@@ -1,6 +1,8 @@
+using System;
 using UnityEngine;
 
 [ExecuteInEditMode]
+[Serializable]
 public class StarController : MonoBehaviour
 {
     private const string defaultMaterial = "Diffuse";

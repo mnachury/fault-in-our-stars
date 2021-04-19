@@ -1,0 +1,19 @@
+.exportItemRooContainer {
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+    margin-bottom: 0;
+    padding-bottom: 2px;
+    border-bottom-width: 2px;
+    border-bottom-color: rgba(77, 77, 77, 255);
+    margin-top: 2px;
+}
+
+.exportItemLabel {
+    font-size: 14px;
+}
+
+.exportItemToggle {
+    height: 100%;
+    width: auto;
+}

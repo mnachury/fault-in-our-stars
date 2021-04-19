@@ -1,0 +1,11 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="StarExporter.uss" />
+    <ui:VisualElement name="RootContainer" class="starExporter" style="height: 100%;">
+        <ui:Label text="Preset exporter" display-tooltip-when-elided="true" name="Title" class="title" />
+        <ui:VisualElement name="PresetListContainer" class="presetListContainer" />
+        <ui:VisualElement name="ButtonContainer" class="buttonExportContainer">
+            <ui:Button text="Save as ..." display-tooltip-when-elided="true" name="ExportButton" class="buttonExport" />
+            <ui:Button text="Cancel" display-tooltip-when-elided="true" name="Cancel" class="buttonExport" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

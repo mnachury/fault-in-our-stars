@@ -1,0 +1,38 @@
+.starExporter {
+    flex-direction: column;
+    align-items: center;
+}
+
+.buttonExport {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    font-size: 16px;
+}
+
+.presetListContainer {
+    width: 100%;
+    height: 100%;
+}
+
+.buttonExportContainer {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    width: 80%;
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+.title {
+    font-size: 16px;
+    width: 100%;
+    -unity-text-align: upper-center;
+    background-color: rgba(77, 77, 77, 255);
+    -unity-font-style: bold;
+    border-bottom-width: 2px;
+    border-bottom-color: rgba(116, 116, 116, 255);
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}

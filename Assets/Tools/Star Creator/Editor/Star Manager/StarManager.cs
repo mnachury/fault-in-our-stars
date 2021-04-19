@@ -7,7 +7,11 @@ using System.IO;
 
 public class StarManager : EditorWindow
 {
-    private const string _starPrefabSaveLocation = "Assets/Prefabs/Star prefabs";
+    /// <summary>
+    /// Editor pref key for the location of the star presets saved as prefab in the project
+    /// </summary>
+    public const string StarPresetLocationEditorPrefKey = "StarCreatorPresetLocation";
+    private const string _starPrefabDefaultSaveLocation = "Assets/Prefabs/Star prefabs";
     private string _starDefaultPrefabPath;
     private VisualElement _root;
     private List<string> _starPresets;
@@ -15,6 +19,7 @@ public class StarManager : EditorWindow
     private VisualElement _inspectorContainer;
     private VisualElement _presetEditorContainer;
     private Label _presetSelectedLabel;
+    private StarExporter _exportWindow;
 
     [MenuItem("Window/Star Creator")]
     public static void ShowExample()
@@ -25,8 +30,10 @@ public class StarManager : EditorWindow
 
     public void CreateGUI()
     {
+        if (!EditorPrefs.HasKey(StarPresetLocationEditorPrefKey))
+            EditorPrefs.SetString(StarPresetLocationEditorPrefKey, _starPrefabDefaultSaveLocation);
         _starDefaultPrefabPath = AssetDatabase.GetAssetPath(Resources.Load<GameObject>("DefaultStarPreset"));
-        if (!MakeSureFolderExist(_starPrefabSaveLocation))
+        if (!MakeSureFolderExist(EditorPrefs.GetString(StarPresetLocationEditorPrefKey)))
             return;
         _root = rootVisualElement;
         var UI = Resources.Load<VisualTreeAsset>("StarManager");
@@ -36,7 +43,7 @@ public class StarManager : EditorWindow
 
         BuildListView();
 
-        var newButton = _root.Query<Button>("New").First();
+        var newButton = _root.Query<Button>("NewButton").First();
         newButton.clicked += OnNewClicked;
 
         _inspectorContainer = _root.Query<VisualElement>("InspectorContainer").First();
@@ -46,6 +53,9 @@ public class StarManager : EditorWindow
 
         _presetSelectedLabel = _root.Query<Label>("PresetSelectedLabel").First();
 
+        var exportButton = _root.Query<Button>("ExportButton").First();
+        exportButton.clicked += OnExporButtonClicked;
+
         RefreshPresetList();
     }
 
@@ -53,7 +63,7 @@ public class StarManager : EditorWindow
     private void RefreshPresetList()
     {
         _starPresets.Clear();
-        var assets = Directory.GetFiles(_starPrefabSaveLocation);
+        var assets = Directory.GetFiles(EditorPrefs.GetString(StarPresetLocationEditorPrefKey));
         foreach (string asset in assets)
         {
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(asset);
@@ -81,7 +91,7 @@ public class StarManager : EditorWindow
         };
         const int itemHeight = 24;
         _listview = new ListView(_starPresets, itemHeight, makeItem, bindItem);
-        _listview.selectionType = SelectionType.Multiple;
+        _listview.selectionType = SelectionType.Single;
         _listview.style.flexGrow = 1.0f;
 
         var list = _root.Query<VisualElement>("ListViewContainer").First();
@@ -91,9 +101,19 @@ public class StarManager : EditorWindow
 
     #region callbacks
 
+    private void OnExporButtonClicked()
+    {
+        if (_exportWindow != null)
+            _exportWindow.Close();
+        _exportWindow = CreateInstance<StarExporter>();
+        _exportWindow.position = position;
+        _exportWindow.ShowPopup();
+        _exportWindow.Init(_starPresets);
+    }
+
     private void OnAddClicked(int index)
     {
-        var asset = AssetDatabase.LoadAssetAtPath<GameObject>($"{_starPrefabSaveLocation}/{_starPresets[index]}.prefab");
+        var asset = AssetDatabase.LoadAssetAtPath<GameObject>($"{EditorPrefs.GetString(StarPresetLocationEditorPrefKey)}/{_starPresets[index]}.prefab");
         asset.TryGetComponent<StarController>(out var controller);
         var prefab = (GameObject)PrefabUtility.InstantiatePrefab(asset);
         prefab.name = controller.Name;
@@ -103,7 +123,7 @@ public class StarManager : EditorWindow
 
     private void OnCopyClicked(int index)
     {
-        var newPreset = CopyPrefab($"{_starPrefabSaveLocation}/{_starPresets[index]}.prefab");
+        var newPreset = CopyPrefab($"{EditorPrefs.GetString(StarPresetLocationEditorPrefKey)}/{_starPresets[index]}.prefab");
         if (newPreset != "")
             OnEditClicked(_starPresets.IndexOf(newPreset));
     }
@@ -113,7 +133,7 @@ public class StarManager : EditorWindow
         _inspectorContainer.Clear();
 
         var starInspector = CreateInstance<StarInspector>();
-        var asset = AssetDatabase.LoadAssetAtPath<GameObject>($"{_starPrefabSaveLocation}/{_starPresets[index]}.prefab");
+        var asset = AssetDatabase.LoadAssetAtPath<GameObject>($"{EditorPrefs.GetString(StarPresetLocationEditorPrefKey)}/{_starPresets[index]}.prefab");
         asset.TryGetComponent<StarController>(out var controller);
         starInspector.ChangeTarget(controller);
         _inspectorContainer.Add(starInspector.CreateInspectorGUI());
@@ -125,7 +145,7 @@ public class StarManager : EditorWindow
     {
         if (_starPresets[index] != textField.value)
         {
-            var error = AssetDatabase.MoveAsset($"{_starPrefabSaveLocation}/{_starPresets[index]}.prefab", $"{_starPrefabSaveLocation}/{textField.value}.prefab");
+            var error = AssetDatabase.MoveAsset($"{EditorPrefs.GetString(StarPresetLocationEditorPrefKey)}/{_starPresets[index]}.prefab", $"{EditorPrefs.GetString(StarPresetLocationEditorPrefKey)}/{textField.value}.prefab");
             if (error != "")
             {
                 Debug.LogWarning($"Invalid name");
@@ -151,7 +171,7 @@ public class StarManager : EditorWindow
     {
         if (EditorUtility.DisplayDialog("Delete confirmation", $"Are you sure that you want to delete the preset {_starPresets[index]}", "Delete", "Cancel"))
         {
-            AssetDatabase.DeleteAsset($"{_starPrefabSaveLocation}/{_starPresets[index]}.prefab");
+            AssetDatabase.DeleteAsset($"{EditorPrefs.GetString(StarPresetLocationEditorPrefKey)}/{_starPresets[index]}.prefab");
             _presetEditorContainer.visible = false;
             RefreshPresetList();
         }
@@ -189,12 +209,12 @@ public class StarManager : EditorWindow
             starName = $"Star preset {i++}";
         } while (_starPresets.Contains(starName));
 
-        if (!AssetDatabase.CopyAsset(prefabPath, $"{_starPrefabSaveLocation}/{starName}.prefab"))
+        if (!AssetDatabase.CopyAsset(prefabPath, $"{EditorPrefs.GetString(StarPresetLocationEditorPrefKey)}/{starName}.prefab"))
         {
-            Debug.LogError($"Asset copy failed, make sure you have acces to {_starPrefabSaveLocation} in your asset folder");
+            Debug.LogError($"Asset copy failed, make sure you have acces to {EditorPrefs.GetString(StarPresetLocationEditorPrefKey)} in your asset folder");
             return "";
         }
-        var newPreset = AssetDatabase.LoadAssetAtPath<GameObject>($"{ _starPrefabSaveLocation}/{ starName}.prefab");
+        var newPreset = AssetDatabase.LoadAssetAtPath<GameObject>($"{ EditorPrefs.GetString(StarPresetLocationEditorPrefKey)}/{ starName}.prefab");
         if (newPreset.TryGetComponent<StarController>(out var newStarController))
             newStarController.Name = starName;
 

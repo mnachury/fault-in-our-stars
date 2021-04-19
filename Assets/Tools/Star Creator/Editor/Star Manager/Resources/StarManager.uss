@@ -1,0 +1,8 @@
+.descriptionLabel {
+    align-items: auto;
+    justify-content: flex-start;
+    -unity-text-align: middle-center;
+    white-space: nowrap;
+    font-size: 14px;
+    background-color: rgba(77, 77, 77, 255);
+}
