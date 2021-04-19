@@ -45,9 +45,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2960108f5bf12b44cac35bfea69db73e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _name: Star preset 1
-  _color: {r: 1, g: 0.6736357, b: 0, a: 0}
-  _radius: 17
+  _name: Sun
+  _color: {r: 1, g: 0.86571324, b: 0, a: 0}
+  _radius: 14
   _gravityWellRadius: 2
 --- !u!33 &7426341075039022418
 MeshFilter:

@@ -19,10 +19,15 @@ public class StarManager : EditorWindow
     private VisualElement _inspectorContainer;
     private VisualElement _presetEditorContainer;
     private Label _presetSelectedLabel;
-    private StarExporter _exportWindow;
+    private StarToJson _starToJsonWindow;
+
+    public void OnFocus()
+    {
+        RefreshPresetList();
+    }
 
     [MenuItem("Window/Star Creator")]
-    public static void ShowExample()
+    public static void ShowWindow()
     {
         StarManager wnd = GetWindow<StarManager>();
         wnd.titleContent = new GUIContent("Star creator");
@@ -53,8 +58,8 @@ public class StarManager : EditorWindow
 
         _presetSelectedLabel = _root.Query<Label>("PresetSelectedLabel").First();
 
-        var exportButton = _root.Query<Button>("ExportButton").First();
-        exportButton.clicked += OnExporButtonClicked;
+        _root.Query<Button>("ExportButton").First().clicked += OnExportButtonClicked;
+        _root.Query<Button>("ImportButton").First().clicked += OnImportButtonClicked;
 
         RefreshPresetList();
     }
@@ -100,15 +105,30 @@ public class StarManager : EditorWindow
     #endregion
 
     #region callbacks
-
-    private void OnExporButtonClicked()
+    private void OnImportButtonClicked()
     {
-        if (_exportWindow != null)
-            _exportWindow.Close();
-        _exportWindow = CreateInstance<StarExporter>();
-        _exportWindow.position = position;
-        _exportWindow.ShowPopup();
-        _exportWindow.Init(_starPresets);
+        if (_starToJsonWindow != null)
+            _starToJsonWindow.Close();
+        _starToJsonWindow = CreateInstance<StarToJson>();
+        _starToJsonWindow.position = position;
+        _starToJsonWindow.ShowPopup();
+        _starToJsonWindow.Init(true);
+    }
+
+    private void OnExportButtonClicked()
+    {
+        if (_starPresets == null || _starPresets.Count == 0)
+        {
+            EditorUtility.DisplayDialog("Export result", "No preset to export, create some first.", "Ok");
+            return;
+        }
+        if (_starToJsonWindow != null)
+            _starToJsonWindow.Close();
+        _starToJsonWindow = CreateInstance<StarToJson>();
+        _starToJsonWindow.position = position;
+        _starToJsonWindow.ShowPopup();
+        _starToJsonWindow.Init(false);
+        _starToJsonWindow.Populate(_starPresets);
     }
 
     private void OnAddClicked(int index)
@@ -203,10 +223,10 @@ public class StarManager : EditorWindow
     private string CopyPrefab(string prefabPath)
     {
         string starName;
-        int i = 1;
+        int i = 0;
         do
         {
-            starName = $"Star preset {i++}";
+            starName = $"Star preset {++i}";
         } while (_starPresets.Contains(starName));
 
         if (!AssetDatabase.CopyAsset(prefabPath, $"{EditorPrefs.GetString(StarPresetLocationEditorPrefKey)}/{starName}.prefab"))
@@ -216,7 +236,8 @@ public class StarManager : EditorWindow
         }
         var newPreset = AssetDatabase.LoadAssetAtPath<GameObject>($"{ EditorPrefs.GetString(StarPresetLocationEditorPrefKey)}/{ starName}.prefab");
         if (newPreset.TryGetComponent<StarController>(out var newStarController))
-            newStarController.Name = starName;
+            newStarController.Name = $"Star {i}";
+        newPreset.name = starName;
 
         RefreshPresetList();
         return starName;

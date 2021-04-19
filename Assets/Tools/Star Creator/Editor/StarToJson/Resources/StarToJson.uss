@@ -1,20 +1,20 @@
-.starExporter {
+.starToJson {
     flex-direction: column;
     align-items: center;
 }
 
-.buttonExport {
+.starToJsonButton {
     padding-top: 4px;
     padding-bottom: 4px;
     font-size: 16px;
 }
 
-.presetListContainer {
+.starToJsonPesetListContainer {
     width: 100%;
     height: 100%;
 }
 
-.buttonExportContainer {
+.starToJsonButtonContainer {
     flex-direction: row;
     align-items: center;
     justify-content: space-around;
@@ -27,12 +27,16 @@
     font-size: 16px;
     width: 100%;
     -unity-text-align: upper-center;
-    background-color: rgba(77, 77, 77, 255);
+    background-color: rgb(77, 77, 77);
     -unity-font-style: bold;
     border-bottom-width: 2px;
-    border-bottom-color: rgba(116, 116, 116, 255);
+    border-bottom-color: rgb(116, 116, 116);
     margin-top: 0;
     margin-bottom: 0;
     padding-top: 4px;
     padding-bottom: 4px;
+}
+
+.starToJsonButton {
+    font-size: 12px;
 }

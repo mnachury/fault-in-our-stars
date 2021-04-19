@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="PresetNotUnique.uss" />
+    <ui:VisualElement name="PesetNotUniqueRoot" style="flex-direction: column; width: 100%; align-items: center; justify-content: space-between;">
+        <ui:Label text="A preset named preset name already exist" display-tooltip-when-elided="true" name="Label" class="title" />
+        <ui:Button text="Keep Both" display-tooltip-when-elided="true" name="KeepBoth" class="button" />
+        <ui:Button text="Replace" display-tooltip-when-elided="true" name="Replace" class="button" />
+        <ui:Button text="Skip" display-tooltip-when-elided="true" name="Skip" class="button" />
+        <ui:Toggle label="Remember my choice" tooltip="Remembers your choice for the remaining of the import" name="RememberToggle" style="font-size: 12px; width: auto;" />
+    </ui:VisualElement>
+</ui:UXML>

@@ -1,0 +1,10 @@
+.button {
+    width: 80px;
+    font-size: 14px;
+}
+
+.title {
+    -unity-font-style: bold;
+    font-size: 14px;
+    margin-bottom: 10px;
+}

@@ -22,7 +22,8 @@ public class StarController : MonoBehaviour
         set
         {
             _name = value;
-            transform.name = _name;
+            if (isActiveAndEnabled)
+                transform.name = _name;
         }
     }
 
@@ -32,8 +33,9 @@ public class StarController : MonoBehaviour
         set
         {
             _color = value;
-            if (_material)
-                _material.color = _color;
+            if (isActiveAndEnabled)
+                if (_material)
+                    _material.color = _color;
         }
     }
 
@@ -43,7 +45,8 @@ public class StarController : MonoBehaviour
         set
         {
             _radius = value;
-            transform.localScale = new Vector3(_radius, _radius, _radius);
+            if (isActiveAndEnabled)
+                transform.localScale = new Vector3(_radius, _radius, _radius);
         }
     }
 
@@ -51,13 +54,13 @@ public class StarController : MonoBehaviour
     {
         get => _gravityWellRadius;
         set => _gravityWellRadius = value;
-        
+
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        if(_name == "")
+        if (_name == "")
             _name = name;
 
         // Color
@@ -72,8 +75,8 @@ public class StarController : MonoBehaviour
             _material.color = _color;
         else
             _color = _material.color;
-        
-        if(_radius == default(float))
+
+        if (_radius == default(float))
             _radius = transform.localScale.x;
     }
 
