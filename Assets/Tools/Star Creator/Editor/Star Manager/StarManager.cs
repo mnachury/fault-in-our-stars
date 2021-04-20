@@ -20,7 +20,8 @@ public class StarManager : EditorWindow
     private VisualElement _inspectorContainer;
     private VisualElement _presetEditorContainer;
     private Label _presetSelectedLabel;
-    private StarToJson _starToJsonWindow;
+    private StarImporter _importerWindow;
+    private StarExporter _exporterWindow;
 
     [MenuItem("Window/Star Creator")]
     public static void ShowWindow()
@@ -109,11 +110,11 @@ public class StarManager : EditorWindow
     #region callbacks
     private void OnImportButtonClicked()
     {
-        if (_starToJsonWindow != null)
-            _starToJsonWindow.Close();
-        _starToJsonWindow = CreateInstance<StarToJson>();
-        _starToJsonWindow.ShowUtility();
-        _starToJsonWindow.Init(true, RefreshPresetList);
+        if (_importerWindow != null)
+            _importerWindow.Close();
+        _importerWindow = CreateInstance<StarImporter>();
+        _importerWindow.ShowUtility();
+        _importerWindow.Init(RefreshPresetList);
     }
 
     private void OnExportButtonClicked()
@@ -123,12 +124,11 @@ public class StarManager : EditorWindow
             EditorUtility.DisplayDialog("Export result", "No preset to export, create some first.", "Ok");
             return;
         }
-        if (_starToJsonWindow != null)
-            _starToJsonWindow.Close();
-        _starToJsonWindow = CreateInstance<StarToJson>();
-        _starToJsonWindow.ShowUtility();
-        _starToJsonWindow.Init(false);
-        _starToJsonWindow.Populate(_starPresets);
+        if (_exporterWindow != null)
+            _exporterWindow.Close();
+        _exporterWindow = CreateInstance<StarExporter>();
+        _exporterWindow.ShowUtility();
+        _exporterWindow.Init(_starPresets);
     }
 
     private void OnAddClicked(int index)

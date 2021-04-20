@@ -1,5 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <Style src="StarToJsonListItem.uss" />
+    <Style src="StarImportExportListItem.uss" />
     <ui:VisualElement name="RootContainer" class="exportItemRooContainer">
         <ui:Label text="ItemLabel" display-tooltip-when-elided="true" name="ItemLabel" class="exportItemLabel" />
         <ui:Toggle name="ItemToggle" class="exportItemToggle" />

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7426341075039022418}
   - component: {fileID: -8759734018796532925}
   m_Layer: 0
-  m_Name: Star preset 1
+  m_Name: Sunny
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46,9 +46,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _name: Sun
-  _color: {r: 0.9942193, g: 1, b: 0, a: 0}
-  _radius: 2
-  _gravityWellRadius: 5
+  _color: {r: 1, g: 0.67560244, b: 0, a: 0}
+  _radius: 12
+  _gravityWellRadius: 5.85
 --- !u!33 &7426341075039022418
 MeshFilter:
   m_ObjectHideFlags: 0
