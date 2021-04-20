@@ -24,4 +24,4 @@ Also, due to it being a technical challenge I was less worried about future-proo
 This solution ticks all the requirement of the technical challenge but in a real life situation, the tool would probably have evolved to handle more complex preset that would not be saved purely in a star prefab.  
 
 Finally a point I forgot to watch out for is proper commit history.  
-Usually for me this would have just been a merge request from a fork or feature branch and in the workflows I work with we squash commit at merge.
+Usually for me this would have just been a merge request from a fork or feature branch and in the workflows I work with, we squash commit at merge.
