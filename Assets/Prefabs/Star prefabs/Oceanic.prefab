@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7426341075039022418}
   - component: {fileID: -8759734018796532925}
   m_Layer: 0
-  m_Name: Sunny
+  m_Name: Oceanic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -45,9 +45,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2960108f5bf12b44cac35bfea69db73e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _name: Sun
-  _color: {r: 1, g: 0.8577045, b: 0, a: 0}
-  _radius: 1
+  _name: Wateworld
+  _color: {r: 0.31185475, g: 0.546688, b: 0.9056604, a: 0}
+  _radius: 36
   _gravityWellRadius: 2
 --- !u!33 &7426341075039022418
 MeshFilter:

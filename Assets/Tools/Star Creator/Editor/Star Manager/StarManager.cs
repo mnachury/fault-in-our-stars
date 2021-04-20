@@ -62,12 +62,12 @@ public class StarManager : EditorWindow
         RefreshPresetList();
     }
 
+    #region ListView
     public void OnFocus()
     {
         RefreshPresetList();
     }
 
-    #region ListView
     private void RefreshPresetList()
     {
         _starPresets.Clear();
