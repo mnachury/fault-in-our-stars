@@ -18,9 +18,9 @@ For example I used Unity's JsonUtility for sereliazation which does not support 
 This leads me to give up on the .json extention for a .starPresets which contains one json per preset/per line + the preset name.  
 In a normal project I'd have just used Newtonsoft that I probably had already installed anyway.  
 
-Or overly relying on AssetDatabase to ensure a folder exist instead of a simple SystemIO CreateDirectory.  
+Another unnecessary thing was overly relying on AssetDatabase to ensure a folder exist instead of a simple SystemIO CreateDirectory.  
 
-Another aspect of the technical challenge is that I was less worried about future-proofing it which helps explain my choice for preset management which is simply using star prefabs in a folder.  
+Also, due to it being a technical challenge is that I was less worried about future-proofing it which helps explain my choice for preset management which is simply using star prefabs in a folder.  
 This solution ticks all the requirement of the technical challenge but in a real life situation, the tool would probably have evolved to handle more complex preset that would not be saved purely in a star prefab.  
 
 Finally a point I forgot to watch out for is proper commit history.  
