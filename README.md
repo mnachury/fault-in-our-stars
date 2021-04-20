@@ -1,7 +1,7 @@
 # Fault in our stars
 ## Technical challenge
 
-Hello and welcome to my submit ion for the technical challenge.  
+Hello and welcome to my submission for the technical challenge.  
 To get started, clone the repository and open it in unity.  
 The tool is accessible via Window -> Star Creator  
 Doc is [here](Assets/Tools/Star%20Creator/Doc.md)
