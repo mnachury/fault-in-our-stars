@@ -4,7 +4,7 @@
 Hello and welcome to my submit ion for the technical challenge.
 To get started, clone the repository and open it in unity.
 The tool is accessible via Window -> Star Creator
-Doc is [here](Assets/Tools/Star%20Creator/doc.md)
+Doc is [here](Assets/Tools/Star%20Creator/Doc.md)
 
 ### Techical writeups
 It was an interesting project, it's always fun to start back on an empty clean codebase.
