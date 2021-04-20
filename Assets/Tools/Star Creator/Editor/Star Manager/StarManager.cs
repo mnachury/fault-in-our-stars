@@ -114,7 +114,10 @@ public class StarManager : EditorWindow
             _importerWindow.Close();
         _importerWindow = CreateInstance<StarImporter>();
         _importerWindow.ShowUtility();
-        _importerWindow.Init(RefreshPresetList);
+        _importerWindow.Init( () => { 
+            _presetEditorContainer.visible = false;
+            RefreshPresetList();
+        });
     }
 
     private void OnExportButtonClicked()
