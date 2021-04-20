@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 5510348313719737341}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 17, y: 17, z: 17}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -45,8 +45,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2960108f5bf12b44cac35bfea69db73e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _name: Sun
-  _color: {r: 1, g: 0.9452145, b: 0.1273585, a: 0}
+  _name: Star 1
+  _color: {r: 1, g: 0.8577045, b: 0, a: 0}
   _radius: 1
   _gravityWellRadius: 2
 --- !u!33 &7426341075039022418

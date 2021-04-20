@@ -57,6 +57,14 @@ public class StarController : MonoBehaviour
 
     }
 
+    private void OnValidate()
+    {
+        Radius = _radius;
+        Color = _color;
+        GravityWellRadius = _gravityWellRadius;
+        Name = _name;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
