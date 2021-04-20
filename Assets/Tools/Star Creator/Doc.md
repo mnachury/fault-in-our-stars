@@ -8,7 +8,7 @@ This will open you a window where you'll be able to manage star presets and add 
 Changes to the presets are saved in real time in the project.  
 ![](https://i.imgur.com/h8Rewig.png)  
 
-Once added to your scene, you'll still be able to modify the properties of your stars in their inspectors.  
+Once added to your scene, you'll still be able to modify the properties of your stars in their inspector.  
 A change made here won't affect back the preset.  
 
 ### Export and import your presets
