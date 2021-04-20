@@ -5,6 +5,6 @@
         <ui:Button text="Keep Both" display-tooltip-when-elided="true" name="KeepBoth" class="button" />
         <ui:Button text="Replace" display-tooltip-when-elided="true" name="Replace" class="button" />
         <ui:Button text="Skip" display-tooltip-when-elided="true" name="Skip" class="button" />
-        <ui:Toggle label="Remember my choice" tooltip="Remembers your choice for the remaining of the import" name="RememberToggle" style="font-size: 12px; width: auto;" />
+        <ui:Toggle label="Remember my choice for future conflict " tooltip="Remembers your choice for the remaining of the import" name="RememberToggle" style="font-size: 12px; width: auto;" />
     </ui:VisualElement>
 </ui:UXML>

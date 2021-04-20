@@ -46,8 +46,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _name: Sun
-  _color: {r: 1, g: 0.86571324, b: 0, a: 0}
-  _radius: 14
+  _color: {r: 1, g: 0.9452145, b: 0.1273585, a: 0}
+  _radius: 1
   _gravityWellRadius: 2
 --- !u!33 &7426341075039022418
 MeshFilter:

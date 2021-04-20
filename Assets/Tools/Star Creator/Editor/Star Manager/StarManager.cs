@@ -21,11 +21,6 @@ public class StarManager : EditorWindow
     private Label _presetSelectedLabel;
     private StarToJson _starToJsonWindow;
 
-    public void OnFocus()
-    {
-        RefreshPresetList();
-    }
-
     [MenuItem("Window/Star Creator")]
     public static void ShowWindow()
     {
@@ -61,6 +56,11 @@ public class StarManager : EditorWindow
         _root.Query<Button>("ExportButton").First().clicked += OnExportButtonClicked;
         _root.Query<Button>("ImportButton").First().clicked += OnImportButtonClicked;
 
+        RefreshPresetList();
+    }
+
+    public void OnFocus()
+    {
         RefreshPresetList();
     }
 
@@ -110,9 +110,8 @@ public class StarManager : EditorWindow
         if (_starToJsonWindow != null)
             _starToJsonWindow.Close();
         _starToJsonWindow = CreateInstance<StarToJson>();
-        _starToJsonWindow.position = position;
-        _starToJsonWindow.ShowPopup();
-        _starToJsonWindow.Init(true);
+        _starToJsonWindow.ShowUtility();
+        _starToJsonWindow.Init(true, RefreshPresetList);
     }
 
     private void OnExportButtonClicked()
@@ -125,8 +124,7 @@ public class StarManager : EditorWindow
         if (_starToJsonWindow != null)
             _starToJsonWindow.Close();
         _starToJsonWindow = CreateInstance<StarToJson>();
-        _starToJsonWindow.position = position;
-        _starToJsonWindow.ShowPopup();
+        _starToJsonWindow.ShowUtility();
         _starToJsonWindow.Init(false);
         _starToJsonWindow.Populate(_starPresets);
     }

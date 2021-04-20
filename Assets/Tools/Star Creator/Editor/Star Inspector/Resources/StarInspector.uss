@@ -1,20 +1,31 @@
+.powerSlider {
+    flex-direction: row;
+}
+
 .title {
-    justify-content: flex-start;
-    align-items: auto;
-    -unity-text-align: middle-center;
-    background-color: rgb(77, 77, 77);
-    -unity-font-style: bold;
-    border-top-width: 0;
-    border-bottom-width: 2px;
-    border-bottom-color: rgb(116, 116, 116);
-    font-size: 16px;
-    margin-top: 2px;
-    margin-left: 0;
-    margin-bottom: 2px;
-    width: 100%;
-    height: 20px;
+    margin-top: 0;
 }
 
 .powerSlider {
-    flex-direction: row;
+}
+
+.sliderContainer {
+    width: 100%;
+}
+
+.slider {
+    width: auto;
+    margin-right: 3px;
+}
+
+.title {
+    -unity-text-align: upper-center;
+    -unity-font-style: bold;
+    font-size: 24px;
+    background-color: rgba(116, 116, 116, 255);
+}
+
+.powerSliderTextField {
+    min-width: auto;
+    width: 50px;
 }

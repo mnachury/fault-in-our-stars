@@ -1,8 +1,24 @@
-.descriptionLabel {
-    align-items: auto;
-    justify-content: flex-start;
-    -unity-text-align: middle-center;
-    white-space: nowrap;
-    font-size: 14px;
-    background-color: rgba(77, 77, 77, 255);
+.root {
+    height: 100%;
+    width: 100%;
+}
+
+.title {
+    font-size: 24px;
+    background-color: rgba(116, 116, 116, 255);
+    -unity-text-align: upper-center;
+    -unity-font-style: bold;
+}
+
+.subTitle {
+    border-top-width: 2px;
+    border-top-color: rgb(116, 116, 116);
+    border-bottom-width: 0;
+    margin-top: 0;
+    padding-top: 0;
+    border-left-color: rgb(116, 116, 116);
+    border-right-color: rgb(116, 116, 116);
+    border-bottom-color: rgb(116, 116, 116);
+    -unity-text-align: upper-center;
+    font-size: 20px;
 }

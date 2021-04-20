@@ -6,9 +6,11 @@ using UnityEngine.UIElements;
 public class PresetNotUnique : EditorWindow
 {
     private VisualElement _root;
-    private Choice _choice;
+    private Label _label;
+    private ConflictStrategy _conflictStrat;
     private bool _remember;
     private bool _choosed = false;
+
     public void CreateGUI()
     {
         _root = rootVisualElement;
@@ -16,10 +18,16 @@ public class PresetNotUnique : EditorWindow
         UI.CloneTree(_root);
         var styleSheet = Resources.Load<StyleSheet>("PresetNotUnique");
         _root.styleSheets.Add(styleSheet);
-        _root.Query<Button>("KeepBoth").First().clicked += () => ChoiceMade(Choice.KeepBoth);
-        _root.Query<Button>("Replace").First().clicked += () => ChoiceMade(Choice.Replace);
-        _root.Query<Button>("Skip").First().clicked += () => ChoiceMade(Choice.Skip);
+        _root.Query<Button>("KeepBoth").First().clicked += () => ChoiceMade(ConflictStrategy.KeepBoth);
+        _root.Query<Button>("Replace").First().clicked += () => ChoiceMade(ConflictStrategy.Replace);
+        _root.Query<Button>("Skip").First().clicked += () => ChoiceMade(ConflictStrategy.Skip);
         _root.Query<Toggle>("RememberToggle").First().RegisterCallback<ChangeEvent<bool>>(OnRememberChange);
+        _label = _root.Query<Label>("Label").First();
+    }
+
+    public void Init(string presetName)
+    {
+        _label.text = $"A preset named {presetName} already exist";
     }
 
     private void OnRememberChange(ChangeEvent<bool> evt)
@@ -27,24 +35,18 @@ public class PresetNotUnique : EditorWindow
         _remember = evt.newValue;
     }
 
-    private void ChoiceMade(Choice choice)
+    private void ChoiceMade(ConflictStrategy choice)
     {
-        _choice = choice;
+        _conflictStrat = choice;
         _choosed = true;
         Close();
     }
 
-    public async Task<(Choice choice, bool remember)> WaitForChoiceAsync()
+    public async Task<(ConflictStrategy choice, bool remember)> WaitForChoiceAsync()
     {
         while (!_choosed)
             await Task.Delay(10);
-        return (_choice, _remember);
+        return (_conflictStrat, _remember);
     }
 
-    public enum Choice
-    {
-        KeepBoth,
-        Replace,
-        Skip
-    }
 }

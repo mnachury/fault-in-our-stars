@@ -8,12 +8,20 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+
 public class StarToJson : EditorWindow
 {
     private VisualElement _root;
-    private Dictionary<string, bool> _presetToExport;
-    private List<string> _presetNameToExport;
+    private Button _exportButton;
+    private Button _importButton;
+    private Button _loadFileButton;
+    private VisualElement _listContainer;
+    private VisualElement _buttonContainer;
+    private Label _title;
+    private Dictionary<string, bool> _presetListDict;
+    private List<string> _presetNames;
     private List<(string preset, string json)> _starPresetToImport;
+    private Action _refresh;
 
     public void CreateGUI()
     {
@@ -22,48 +30,55 @@ public class StarToJson : EditorWindow
         UI.CloneTree(_root);
         var styleSheet = Resources.Load<StyleSheet>("StarToJson");
         _root.styleSheets.Add(styleSheet);
+        _exportButton = _root.Query<Button>("ExportButton").First();
+        _exportButton.clicked += OnExportClicked;
+        _importButton = _root.Query<Button>("ImportButton").First();
+        _importButton.clicked += OnImportClicked;
+        _loadFileButton = _root.Query<Button>("LoadButton").First();
+        _loadFileButton.clicked += OnLoadClicked;
+        _listContainer = _root.Query<VisualElement>("PresetListContainer").First();
+        _buttonContainer = _root.Query<VisualElement>("ButtonContainer").First();
+        _title = _root.Query<Label>("Title").First();
+        _root.Query<Button>("CancelButton").First().clicked += Close;
     }
 
-    public void Init(bool import)
+    public void Init(bool import, Action refresh = null)
     {
+        _refresh = refresh;
         if (import)
         {
-            _root.Query<Label>("PopupTitle").First().text = "Preset Importer";
-            _root.Query<VisualElement>("ExportContainer").First().visible = false;
-            _root.Query<Button>("ImportButton").First().clicked += OnImportClicked;
-            _root.Query<Button>("LoadButton").First().clicked += OnLoadClicked;
+            _importButton.visible = false;
+            _buttonContainer.Remove(_exportButton);
+            _title.text = "Preset importer";
         }
         else
         {
-            _root.Query<Label>("PopupTitle").First().text = "Preset Exporter";
-            _root.Query<VisualElement>("ImportContainer").First().visible = false;
-            _root.Query<Button>("ExportButton").First().clicked += OnExportClicked;
+            _buttonContainer.Remove(_importButton);
+            _buttonContainer.Remove(_loadFileButton);
+            _title.text = "Preset exporter";
         }
-        _root.Query<Button>("CancelButton").First().clicked += Close;
-
-
     }
 
     public void Populate(List<string> presetNames)
     {
-        _presetNameToExport = presetNames;
-        _presetToExport = presetNames.ToDictionary(item => item, item => true);
+        _presetNames = presetNames;
+        _presetListDict = presetNames.ToDictionary(item => item, item => true);
 
         // Build list
         Func<VisualElement> makeItem = () => Resources.Load<VisualTreeAsset>("StarToJsonListItem").Instantiate();
         Action<VisualElement, int> bindItem = (root, index) =>
         {
-            root.Query<Label>("ItemLabel").First().text = _presetNameToExport[index];
+            root.Query<Label>("ItemLabel").First().text = _presetNames[index];
             var itemToggle = root.Query<Toggle>("ItemToggle").First();
             itemToggle.value = true;
             itemToggle.RegisterCallback<ChangeEvent<bool>>((e) => OnToggleClicked(e, index));
         };
         const int itemHeight = 24;
-        var listView = new ListView(_presetNameToExport, itemHeight, makeItem, bindItem);
+        var listView = new ListView(_presetNames, itemHeight, makeItem, bindItem);
         listView.selectionType = SelectionType.Single;
         listView.style.flexGrow = 1.0f;
-        var list = _root.Query<VisualElement>("PresetListContainer").First();
-        list.Add(listView);
+        _listContainer.Clear();
+        _listContainer.Add(listView);
     }
 
     #region callbacks
@@ -76,12 +91,18 @@ public class StarToJson : EditorWindow
             return;
         }
         var lines = File.ReadAllLines(file);
+        if (lines.Length < 2)
+        {
+            EditorUtility.DisplayDialog("Import result", "No preset in file", "Ok");
+            return;
+        }
         _starPresetToImport = new List<(string name, string preset)>(lines.Length / 2);
         for (int i = 0; i < lines.Length - 1; i += 2)
         {
             _starPresetToImport.Add((lines[i], lines[i + 1]));
         }
         Populate(_starPresetToImport.Select(item => item.preset).ToList());
+        _importButton.visible = true;
     }
 
     private async void OnImportClicked()
@@ -91,19 +112,19 @@ public class StarToJson : EditorWindow
             EditorUtility.DisplayDialog("Import result", "No preset to import. First load a file", "Ok");
             return;
         }
-        var savePath = EditorPrefs.GetString(StarManager.StarPresetLocationEditorPrefKey) ;
+        var savePath = EditorPrefs.GetString(StarManager.StarPresetLocationEditorPrefKey);
         var starDefaultPrefabPath = AssetDatabase.GetAssetPath(Resources.Load<GameObject>("DefaultStarPreset"));
-        var alreadyExistingPreset = Directory.GetFiles(savePath).ToList();
-        bool alwaysReplace = false;
-        bool alwaysKeepBoth = false;
-        bool alwaysSkip = false;
-        foreach (var starPreset in _starPresetToImport)
+        var alreadyExistingPreset = Directory.EnumerateFiles(savePath).ToList();
+        ConflictStrategy conflictStrat = ConflictStrategy.Undecided;
+        bool rememberConflictStrat = false;
+        // Filter only ticked presets
+        var starPresetToImport = _starPresetToImport.Where(item => _presetListDict[item.preset]);
+        foreach (var starPreset in starPresetToImport)
         {
             // Make sure asset is unique or that we know what to do
+            if (!rememberConflictStrat)
+                conflictStrat = ConflictStrategy.Undecided;
             bool isPresetNameUnique;
-            bool skip = false;
-            bool replace = false;
-            bool keepBoth = false;
             int i = 0;
             string initialName = starPreset.preset;
             string presetName = initialName;
@@ -114,42 +135,23 @@ public class StarToJson : EditorWindow
                 if (!isPresetNameUnique)
                 {
                     // If we don't now what to do
-                    if (!alwaysReplace && !alwaysKeepBoth && !alwaysSkip)
+                    if (conflictStrat == ConflictStrategy.Undecided)
                     {
                         // We ask
                         var presetNotUniqueModal = CreateInstance<PresetNotUnique>();
                         presetNotUniqueModal.ShowUtility();
+                        presetNotUniqueModal.Init(initialName);
                         var response = await presetNotUniqueModal.WaitForChoiceAsync();
-                        switch (response.choice)
-                        {
-                            case PresetNotUnique.Choice.KeepBoth:
-                                if (response.remember)
-                                    alwaysKeepBoth = true;
-                                else
-                                    keepBoth = true;
-                                break;
-                            case PresetNotUnique.Choice.Replace:
-                                if (response.remember)
-                                    alwaysReplace = true;
-                                else
-                                    replace = true;
-                                break;
-                            case PresetNotUnique.Choice.Skip:
-                                if (response.remember)
-                                    alwaysSkip = true;
-                                else
-                                    skip = true;
-                                break;
-                        }
+                        rememberConflictStrat = response.remember;
+                        conflictStrat = response.choice;
                     }
-                    // if we need to find a new name
-                    if (keepBoth || alwaysKeepBoth)
+                    // if we need to find a new name, we try
+                    if (conflictStrat == ConflictStrategy.KeepBoth)
                         presetName = $"{initialName} ({++i})";
-
                 }
                 // If preset is unique or we plan to replace/skip. We can continue
-            } while (!isPresetNameUnique && (!alwaysReplace && !alwaysSkip && !replace && !skip));
-            if (!isPresetNameUnique && (alwaysSkip || skip))
+            } while (!isPresetNameUnique && (conflictStrat != ConflictStrategy.Replace && conflictStrat != ConflictStrategy.Skip));
+            if (!isPresetNameUnique && conflictStrat == ConflictStrategy.Skip)
                 continue;
 
             var newAssetPath = $"{savePath}/{presetName}.prefab";
@@ -164,13 +166,14 @@ public class StarToJson : EditorWindow
             JsonUtility.FromJsonOverwrite(starPreset.json, starController);
         }
         EditorUtility.DisplayDialog("Import result", "Import is done !", "Close");
+        _refresh();
         Close();
     }
 
     private async void OnExportClicked()
     {
         // Get assets to export
-        var assetsToExport = _presetToExport.Where(item => item.Value)?.Select(item => item.Key)?.ToList();
+        var assetsToExport = _presetListDict.Where(item => item.Value)?.Select(item => item.Key)?.ToList();
         if (assetsToExport == null || assetsToExport.Count == 0)
         {
             EditorUtility.DisplayDialog("Export result", "No preset selectioned", "Ok");
@@ -178,7 +181,7 @@ public class StarToJson : EditorWindow
         }
 
 
-        var pathToExport = EditorUtility.SaveFilePanel("Select save location", GetUserPath(), "Unity star preset export", "starpresets");
+        var pathToExport = EditorUtility.SaveFilePanel("Select save location", GetUserPath(), "Star Presets", "starpresets");
         if (string.IsNullOrEmpty(pathToExport))
         {
             EditorUtility.DisplayDialog("Export result", "No save file selected", "Ok");
@@ -199,7 +202,7 @@ public class StarToJson : EditorWindow
 
     private void OnToggleClicked(ChangeEvent<bool> evt, int index)
     {
-        _presetToExport[_presetNameToExport[index]] = evt.newValue;
+        _presetListDict[_presetNames[index]] = evt.newValue;
     }
     #endregion
 

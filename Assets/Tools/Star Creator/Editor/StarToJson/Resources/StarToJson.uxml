@@ -1,17 +1,13 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <Style src="StarToJson.uss" />
-    <ui:VisualElement name="RootContainer" class="starToJson" style="height: 100%;">
-        <ui:Label text="Preset tojson" display-tooltip-when-elided="true" name="PopupTitle" class="title" />
-        <ui:VisualElement name="PresetListContainer" class="starToJsonPesetListContainer" />
-        <ui:VisualElement name="ButtonContainer" class="starToJsonButtonContainer" style="justify-content: space-between; align-items: stretch;">
-            <ui:VisualElement name="ImportContainer" style="flex-direction: row; width: 100%;">
-                <ui:Button text="Load file..." display-tooltip-when-elided="true" name="LoadButton" class="starToJsonButton" />
-                <ui:Button text="Import" display-tooltip-when-elided="true" name="ImportButton" focusable="false" class="starToJsonButton" />
-            </ui:VisualElement>
-            <ui:VisualElement name="ExportContainer" style="flex-direction: row; width: 100%;">
-                <ui:Button text="Save as..." display-tooltip-when-elided="true" name="ExportButton" class="starToJsonButton" />
-            </ui:VisualElement>
-            <ui:Button text="Cancel" display-tooltip-when-elided="true" name="CancelButton" class="starToJsonButton" />
+    <ui:VisualElement name="RootContainer" class="root" style="height: 100%; width: 100%;">
+        <ui:Label text="Preset tojson" display-tooltip-when-elided="true" name="Title" class="title" />
+        <ui:VisualElement name="PresetListContainer" class="listContainer" />
+        <ui:VisualElement name="ButtonContainer" class="buttonContainer">
+            <ui:Button text="Import" display-tooltip-when-elided="true" name="ImportButton" focusable="false" class="button" />
+            <ui:Button text="Load file..." display-tooltip-when-elided="true" name="LoadButton" class="button" />
+            <ui:Button text="Save as..." display-tooltip-when-elided="true" name="ExportButton" class="button" />
+            <ui:Button text="Cancel" display-tooltip-when-elided="true" name="CancelButton" class="button" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
